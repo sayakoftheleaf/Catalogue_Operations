@@ -1,0 +1,26 @@
+title = "config"
+
+# name of the source file
+# filename = 
+
+# name of the sheet we are working with
+# sheet.name = 
+
+# put the total number of rows and columns of the original document here
+# The first row has to be the headers, followed by a blank row
+
+# sheet.rows = 
+# sheet.cols =
+
+# Enter the number of cols in the output file
+# output.cols = 
+
+# Put all the Mappings here
+# Mapping format : 
+# <column identifier in source> = <column identifier in output>
+# Multiple columns in source can map to one column in output
+# Example: 
+# B = E
+# AG = E
+
+
