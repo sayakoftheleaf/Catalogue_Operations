@@ -1,0 +1,36 @@
+# name of the source file
+filename = "source.xlsx"
+
+# name of the sheet we are working with
+# sheet.name = 
+
+# put the total number of rows and columns of the original document here
+# The first row has to be the headers, followed by a blank row
+
+sheet.name = "output_sheet"
+sheet.rows = +5
+sheet.cols = +7
+
+# Enter the number of cols in the output file
+# output.cols = 
+
+# Put all the Mappings here
+# Mapping format : 
+# <column identifier in source> = <column identifier in output>
+# Multiple columns in source can map to one column in output
+# Example: 
+# B = E
+# AG = E
+mapto.B = "E"
+mapto.A = "E"
+
+# Put all the headings of the output excel document here
+# Example: 
+header.B = "Title"
+header.C = "Price"
+header.D = "Tag"
+header.E = "MappedValues"
+
+# The separator that is going to be used to separate multiple values
+separator = "|"
+

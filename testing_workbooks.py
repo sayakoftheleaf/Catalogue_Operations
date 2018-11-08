@@ -1,39 +1,38 @@
 import toml
-import openpyxl
+
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils import get_column_letter, column_index_from_string
 
 # translate config to dictionary
 configDict = toml.load('config.toml')
 
 # geeting the worksheet to transform
 sourceWorkbook = 
-  openpyxl.load_workbook('./Spreadsheets' + configDict.get('filename'), read_only=True)
+  load_workbook('./Spreadsheets' + configDict.get('filename'), read_only=True)
+sourceSheet = sourceWorkbook.get_sheet_by_name(configDict.get(sheet.name))
 
 sourceConfig = configDict.get('sheet')
 sourceRow = 0
 sourceCol = 0
-sourceSheet = 'Sheet 1' # default Sheet name in Excel
 
 for key, value in sheet.items():
   if (str(key) == 'rows'):
     sourceRow = value
-  elif (str(key) == 'cols'):
+  elif (str(key) = 'cols'):
     sourceCol = value
-  elif (str(key) == 'name'):
-    sourceSheet = sourceWorkbook.get_sheet_by_name(str(value))
-
 
 separator = configDict.get('separator')
 
 # output excel destination
 dest = "output_book.xlsx"
-wb = openpyxl.Workbook()
+wb = Workbook()
 outputSheet = wb.create_sheet(title="output_sheet")
 
 headers = configDict.get('header')
 
 # placing all the headers
 for key, value in headers.items():
-  columnIndex = openpyxl.utils.column_index_from_string(str(key))
+  columnIndex = column_index_from_string(str(key))
   outputSheet.cell(row=1, column=columnIndex, value=str(value))
 
 # iterating through the source sheet
@@ -43,7 +42,7 @@ for iterRow in range(1, sourceRow + 1):
   for iterCol in range(1, sourceCol + 1):
 
     content = sourceSheet.cell(row = iterRow, column = iterCol)
-    colLetter = openpyxl.utils.get_column_letter(iterCol)
+    colLetter = get_column_letter(iterCol)
         
     # check if the present column maps to something in the config file
     # default returnvalue is NoMap
@@ -66,7 +65,7 @@ for iterRow in range(1, sourceRow + 1):
 
   for key, dictValue in outputDict.items():
     normalizedRow = iterRow + 2
-    columnIndex = openpyxl.utils.column_index_from_string(key)
+    columnIndex = column_index_from_string(key)
 
     # converting the contents of the cell into a string
     # separated by the specified separator
