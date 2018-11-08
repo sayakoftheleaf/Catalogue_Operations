@@ -12,39 +12,54 @@ sheet.cols = "FK"
 
 # Put all the Mappings here
 # Mapping format : 
-# <column identifier in source> = <column identifier in output>
+# mapto.<column identifier in source> = <column identifier in output>
 # Multiple columns in source can map to one column in output
 # Example: 
-# B = E
-# AG = E
-mapto.A = "A"
-mapto.D = "CK"
+
+mapto.A = "A" #
+mapto.E = "I" # implement cases where one source maps to multiple destinations
+#mapto.E = "K"
+mapto.C = "E"
+mapto.DG = "B"
+mapto.D = "F"
+
+mapto.AN = "U"
+mapto.AO = "V"
+mapto.AP = "W"
+mapto.AQ = "X"
+
+
+#AN:AQ ="U:X"
+
+#mapto.start.source ="AN"
+#mapto.start.des ="U"
+#mapto.end.source ="CY"
+#mapto.end.des ="X"
 
 # The separator that is going to be used to separate multiple values
 separator = "|"
 
-
 # Put all the headings of the output excel document here
-header.A = "Supplier Status (Mandatory)"
-header.B = "UPC/EAN (Mandatory)"
-header.C = "Identifier Type (Mandatory)"
-header.D = "Override GS1 Check?"
-header.E = "MPN (Mandatory)"
-header.F = "Product Name (Original as Per Supplier) (Mandatory)"
-header.G = "Brand (Mandatory)"
-header.H = "Product Category"
-header.I = "Dropship Gross Purchase Price"
-header.J = "Dropship Discount"
-header.K = "Dropship Net Purchase Price"
-header.L = "Dropship Supplier Shipping Charge SKU Flat Rate"
-header.M = "Dropship Supplier Shipping Charge SKU % Rate"
-header.N = "Dropship Supplier Handling Charge Rate"
-header.O = "Dropship Outbound Shipment Type"
-header.P = "Fragile"
-header.Q = "Override Shipping Method?"
-header.R = "Override Dropship Outbound Carrier"
-header.S = "Override Dropship Order Handling Time"
-header.T = "# of Cartons"
+header.A = "Supplier Status (Mandatory)" #blank
+header.B = "UPC/EAN (Mandatory)" # 12 digit identifier
+header.C = "Identifier Type (Mandatory)" # UPC / blank?
+header.D = "Override GS1 Check?" # blank
+header.E = "MPN (Mandatory)" # Manufacturer Part Number
+header.F = "Product Name (Original as Per Supplier) (Mandatory)" 
+header.G = "Brand (Mandatory)" # (in this case, blank)
+header.H = "Product Category" # (in this case, blank)
+header.I = "Dropship Gross Purchase Price" # Price
+header.J = "Dropship Discount" # blank
+header.K = "Dropship Net Purchase Price" # (in this case, blank)
+header.L = "Dropship Supplier Shipping Charge SKU Flat Rate" # (in this case, blank)
+header.M = "Dropship Supplier Shipping Charge SKU % Rate" # (in this case, blank)
+header.N = "Dropship Supplier Handling Charge Rate" # (in this case, blank)
+header.O = "Dropship Outbound Shipment Type" # DE - SPD vs LTL (Small Parcel Delivery vs Less Than Truck Load)
+header.P = "Fragile" # (in this case, blank)
+header.Q = "Override Shipping Method?" # (in this case, blank)
+header.R = "Override Dropship Outbound Carrier" # (in this case, blank)
+header.S = "Override Dropship Order Handling Time" # (in this case, blank)
+header.T = "# of Cartons" #blank
 header.U = "Box 1 Shipping Length (in.) (Mandatory)"
 header.V = "Box 1 Shipping Breadth (in.) (Mandatory)" 
 header.W = "Box 1 Shipping Height (in.) (Mandatory)"
