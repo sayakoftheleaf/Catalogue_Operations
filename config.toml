@@ -1,15 +1,11 @@
 # name of the source file
 filename = "source.xlsx"
 
-# name of the sheet we are working with
-# sheet.name = 
-
 # put the total number of rows and columns of the original document here
-# The first row has to be the headers, followed by a blank row
-
+# Original document should have no headers or blank rows
 sheet.name = "output_sheet"
-sheet.rows = +5
-sheet.cols = +7
+sheet.rows = +2
+sheet.cols = +2
 
 # Enter the number of cols in the output file
 # output.cols = 
