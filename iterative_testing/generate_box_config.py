@@ -1,27 +1,41 @@
 # arguments
 # python3 <programname> <number of boxes> <start column>
 
-def generateNextAlphabet(current):
-  if (len(current) == 1):
-    if (current == "Z"):
-      return "AA"
+def generateExcelColumns (currentCol):
+  lastIndex = len(currentCol) - 1
+  currentIndex = lastIndex
+  newCol = ''
+
+  while (currentIndex >= 0):
+    # find the next letter
+    newLetter = findReplacement(currentCol[currentIndex]) 
+    
+    # if the next letter is an A, we need to do further computations
+    if (newLetter == 'A'):
+      # save the number of A's processed to be appended later
+      newCol = newLetter + newCol
+      
+      # if the encountered A is not the first letter, then proceed
+      if (currentIndex > 0):
+        # move on to the next character on the left
+        currentIndex = currentIndex - 1
+        continue
+      else: # if all the characters are A's, that means, we need to increase the length of the column name
+        return 'A' + newCol
     else:
-      return chr(ord(current) + 1)
+      # if we find a letter that is not A, we change that letter, 
+      # and leave the letters left of it as is
+      # and append all the previously processed characters, if any
+      return modifyStringTill(currentCol, currentIndex, newLetter) + newCol
+
+def modifyStringTill (originalString, indexValue, replacementValue):
+  return originalString[: indexValue] + replacementValue
+
+def findReplacement (letter):
+  if (letter == 'Z'):
+    return 'A'
   else:
-    lastIndex = len(current)
-    currentIndex = lastIndex - 1
-    returnString = current
-    letterToModify = (current)[currentIndex]
+    return chr(ord(letter) + 1)
 
-    while (letterToModify == "Z" and currentIndex >= 0):
-      letterToModify = (current)[currentIndex]
-      returnString = returnString[0:currentIndex] + "A" + returnString[currentIndex + 1:lastIndex]
-      currentIndex = currentIndex - 1
-    return returnString[:currentIndex] + chr(ord(letterToModify) + 1) + returnString[currentIndex+1:lastIndex]
-
-
-print(generateNextAlphabet("AZZ"))
-print(generateNextAlphabet("Z"))
-print(generateNextAlphabet("BAA"))
 
 
