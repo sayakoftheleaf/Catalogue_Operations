@@ -6,9 +6,9 @@ from generate_box_config import generateExcelColumns
 
 def writeSheetOptions(fileObject, name, rows, cols):
     commentString = "\n# Details of the source sheet. Edit in case info is wrong \n\n"
-    name = "sheet.name = {0}\n".format(name)
+    name = "sheet.name = \"{0}\"\n".format(name)
     rows = "sheet.rows = +{0}\n".format(str(rows))
-    cols = "sheet.cols = {0}\n".format(openpyxl.utils.get_column_letter(cols))
+    cols = "sheet.cols = \"{0}\"\n".format(openpyxl.utils.get_column_letter(cols))
 
     fileObject.write("{0}{1}{2}{3}".format(commentString, name, rows, cols))
 
@@ -17,7 +17,7 @@ def writeSheetOptions(fileObject, name, rows, cols):
 
 
 def writeMaps(fileObject, sheet, lastCol):
-    commentString = "\n # Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
+    commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
     colString = commentString
     # iterate through all of the columns
     for currentCol in range(1, lastCol + 1):
