@@ -1,3 +1,6 @@
+import toml
+import openpyxl
+
 def writeSheetOptions(fileObject, name, rows, cols):
     commentString = "\n# Details of the source sheet. Edit in case info is wrong \n\n"
     name = "sheet.name = \"{0}\"\n".format(name)

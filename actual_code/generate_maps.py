@@ -1,15 +1,63 @@
+import toml
+import openpyxl
+
+from generate_box_config import generateExcelColumns
+
 # TODO: Implement cases where one file maps to multiple sources
 
-def writeMaps(fileObject, sheet, lastCol):
+
+def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformationOrder):
+
     commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
+
+    # intitializing the final String with the beginning comment
     colString = commentString
+
+    orderDict = evaluateOrder(boxInformationOrder)
+
+    currentCol = 1
     # iterate through all of the columns
-    for currentCol in range(1, lastCol + 1):
-        # get the letter equivalent of the current column
-        columnLetter = openpyxl.utils.get_column_letter(currentCol)
-        # get the header inside the cell
-        header = sheet.cell(row=1, column=currentCol).value
-        colString += "mapsto.{0} = \"\" # {1}\n".format(columnLetter, header)
+    while (currentCol <= lastCol):
+        outputBoxCol = "T"
+
+        if (currentCol >= boxStartCol and currentCol <= boxEndCol):
+
+            # printing comment to indicate beginning of box mappings
+            if (currentCol == boxStartCol):
+                colString += "# beginning of the box mappings. Please do not change these.\n"
+
+            columnLetter = [openpyxl.utils.get_column_letter(currentCol)]
+            columnLetter.append(openpyxl.utils.get_column_letter(currentCol+1))
+            columnLetter.append(openpyxl.utils.get_column_letter(currentCol+2))
+            columnLetter.append(openpyxl.utils.get_column_letter(currentCol+3))
+
+            BoxCols = [generateExcelColumns(outputBoxCol)]
+            BoxCols.append(generateExcelColumns(BoxCols[0]))
+            BoxCols.append(generateExcelColumns(BoxCols[1]))
+            BoxCols.append(generateExcelColumns(BoxCols[3]))
+
+            boxIter = 0
+            for key, value in orderDict.items():
+              colString += "mapsto.{0} = \"{1}\" \n".format(columnLetter[value], BoxCols[boxIter])
+              boxIter += 1
+
+            # increment
+            currentCol += 4
+
+            # printing comment to indicate the end of box mappings
+            if (currentCol > boxEndCol):
+                colString += "# end of the box mappings.\n"
+        else:
+            # get the header inside the cell
+            header = sheet.cell(row=1, column=currentCol).value
+
+            columnLetter = openpyxl.utils.get_column_letter(currentCol)
+
+            colString += "mapsto.{0} = \"\" # {1}\n".format(
+                columnLetter, header)
+
+            # increment
+            currentCol += 1
 
     fileObject.write(colString)
 
@@ -25,7 +73,3 @@ def evaluateOrder(boxInformationOrder):
         orderDict[value] = boxInformationOrder.index(value)
 
     return orderDict
-
-# FIXME:
-def mapBoxes (fileObject, sheet, sourceBoxesStartFrom, boxInformationOrder):
-    orderDict = evaluateOrder(boxInformationOrder)

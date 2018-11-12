@@ -1,5 +1,6 @@
 import toml
 import openpyxl
+from pathlib import Path
 
 from generate_box_config import generateExcelColumns
 from generate_headers import writeHeaders
@@ -28,20 +29,26 @@ def main():
     configFileName = input(
         "Please enter the name of the config file to be generated: ")
 
-    # TODO: sourceFile will be inside the SpreadSheets folder
+    # Resolving the Paths
+    # TODO: Test if these are working
+    currentDir = Path('.')
+    sourceFile = currentDir / 'Spreadsheets' / sourceFile
+    configFile = currentDir / 'Configs' / (configFileName + '.toml')
+
     workBook = openpyxl.load_workbook(sourceFile, read_only=True)
     workSheet = workBook[sourceSheet]
 
     workRows = workSheet.max_row
     workColumns = workSheet.max_column
 
+    boxStartCol = openpyxl.utils.column_index_from_string(sourceBoxesStartFrom)
+    boxEndCol = boxStartCol + (4 * numberOfBoxes)
+
     # create the toml file
-    # TODO: this needs to be inside the Configs folder
-    fileName = configFileName + ".toml"
-    file = open(fileName, "w+")
+    file = open(configFile, "w+")
 
     writeSheetOptions(file, sourceSheet, workRows, workColumns)
-    writeMaps(file, workSheet, workColumns)
+    writeMaps(file, workSheet, workColumns, boxStartCol, boxEndCol, boxInformationOrder)
     writeHeaders(file, numberOfBoxes)
 
     print("Config file created successfully!")
