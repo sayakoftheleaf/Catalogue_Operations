@@ -5,7 +5,7 @@ from generate_box_config import generateExcelColumns
 
 # TODO: Implement cases where one file maps to multiple sources
 
-
+# TODO: Test this
 def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformationOrder):
 
     commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
@@ -16,15 +16,16 @@ def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformatio
     orderDict = evaluateOrder(boxInformationOrder)
 
     currentCol = 1
+    outputBoxCol = "T"
+
     # iterate through all of the columns
     while (currentCol <= lastCol):
-        outputBoxCol = "T"
 
         if (currentCol >= boxStartCol and currentCol <= boxEndCol):
 
             # printing comment to indicate beginning of box mappings
             if (currentCol == boxStartCol):
-                colString += "# beginning of the box mappings. Please do not change these.\n"
+                colString += "\n# beginning of the box mappings. Please do not change these.\n"
 
             columnLetter = [openpyxl.utils.get_column_letter(currentCol)]
             columnLetter.append(openpyxl.utils.get_column_letter(currentCol+1))
@@ -34,19 +35,20 @@ def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformatio
             BoxCols = [generateExcelColumns(outputBoxCol)]
             BoxCols.append(generateExcelColumns(BoxCols[0]))
             BoxCols.append(generateExcelColumns(BoxCols[1]))
-            BoxCols.append(generateExcelColumns(BoxCols[3]))
+            BoxCols.append(generateExcelColumns(BoxCols[2]))
 
             boxIter = 0
             for key, value in orderDict.items():
               colString += "mapsto.{0} = \"{1}\" \n".format(columnLetter[value], BoxCols[boxIter])
               boxIter += 1
 
-            # increment
+            # increments
             currentCol += 4
+            outputBoxCol = BoxCols[3]
 
             # printing comment to indicate the end of box mappings
             if (currentCol > boxEndCol):
-                colString += "# end of the box mappings.\n"
+                colString += "# end of the box mappings.\n\n"
         else:
             # get the header inside the cell
             header = sheet.cell(row=1, column=currentCol).value

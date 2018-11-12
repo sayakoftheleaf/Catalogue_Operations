@@ -21,10 +21,10 @@ def main():
     numberOfBoxes = int(numberOfBoxes)
 
     sourceBoxesStartFrom = input(
-        "Please enter the column (of the source document) from which the information about the boxes begin:")
+        "Please enter the column (of the source document) from which the information about the boxes begin: ")
    
     boxInformationOrder = input(
-        "Please enter the order of the information presented in the source document (Example: L,H,B,W)")
+        "Please enter the order of the information presented in the source document (Example: L,H,B,W): ")
 
     configFileName = input(
         "Please enter the name of the config file to be generated: ")

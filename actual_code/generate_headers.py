@@ -1,6 +1,8 @@
 import toml
 import openpyxl
 
+from generate_box_config import generateExcelColumns
+
 def writeHeaders(fileObject, numberOfBoxes):
     commentString = "\n# These are the headers for the output file. Please do not change these.\n"
     returnedDict = headersOfBoxes(numberOfBoxes, headersBeforeBox([]))
