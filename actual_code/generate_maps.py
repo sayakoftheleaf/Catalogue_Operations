@@ -3,9 +3,6 @@ import openpyxl
 
 from generate_box_config import generateExcelColumns
 
-# TODO: Implement cases where one file maps to multiple sources
-
-# TODO: Test this
 def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformationOrder):
 
     commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
