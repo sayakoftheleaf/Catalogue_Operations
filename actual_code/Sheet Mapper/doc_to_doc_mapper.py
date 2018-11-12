@@ -57,17 +57,16 @@ def main():
             colLetter = openpyxl.utils.get_column_letter(iterCol)
 
             # TODO: check if this works, because you changed read mode to Data only and changed this from internal_value to value
-          content = sourceSheet.cell(row = iterRow, column = iterCol).value
+            content = sourceSheet.cell(row = iterRow, column = iterCol).value
         
-          # Check if the present column maps to something in the config file
-          # This is just a sanity check. In reality, the config generator will 
-          # always have all of the source columns
-          if colLetter in mapsTo:
-              outputCol = mapsTo[colLetter] # getting the output columns
+            # Check if the present column maps to something in the config file
+            # This is just a sanity check. In reality, the config generator will always have all of the source columns
+            if colLetter in mapsTo:
+                outputCol = mapsTo[colLetter] # getting the output columns
 
-              # Put the content of the source for every column the source maps to
-              for singleColumn in str(outputCol).split(','):
-                  outputDict[singleColumn] = [content]
+                # Put the content of the source for every column the source maps to
+                for singleColumn in str(outputCol).split(','):
+                    outputDict[singleColumn] = [content]
 
         for key, dictValue in outputDict.items():
             # adjusting to fit the headers
