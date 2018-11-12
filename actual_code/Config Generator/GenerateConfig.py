@@ -30,7 +30,7 @@ def main():
         "Please enter the name of the config file to be generated: ")
 
     # Resolving the Paths
-    currentDir = Path('.')
+    currentDir = Path('./..')
     sourceFile = currentDir / 'Spreadsheets' / sourceFile
     configFile = currentDir / 'Configs' / (configFileName + '.toml')
 
