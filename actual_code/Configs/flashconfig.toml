@@ -1,4 +1,3 @@
-
 # Details of the source sheet. Edit in case info is wrong 
 
 sheet.name = "DB"
@@ -10,16 +9,16 @@ sheet.cols = "FP"
 # DO NOT PUT WHITESPACE AFTER COMMA!
 # For example: mapsto.A = "B,X"
 
-mapsto.A = "" # Status
+mapsto.A = "A" # Status
 mapsto.B = "" # Short Description
 mapsto.C = "" # Product Code Computed
-mapsto.D = "" # Product Description
+mapsto.D = "DI" # Product Description
 mapsto.E = "" # Flash FOB Price
 mapsto.F = "" # Flash Internet Only Landed Cost
 mapsto.G = "" # NMFC Code (Text)
 mapsto.H = "" # Capacity
-mapsto.I = "" # Product Series
-mapsto.J = "" # MSRP List Price
+mapsto.I = "F" # Product Series
+mapsto.J = "DA" # MSRP List Price
 mapsto.K = "" # Flash Product Description
 mapsto.L = "" # Caption 1
 mapsto.M = "" # Caption 2
@@ -41,12 +40,12 @@ mapsto.AB = "" # Caption 17
 mapsto.AC = "" # Caption 18
 mapsto.AD = "" # Caption 19
 mapsto.AE = "" # Caption 20
-mapsto.AF = "" # Image 1
-mapsto.AG = "" # Image 2
-mapsto.AH = "" # Image 3
-mapsto.AI = "" # Image 4
-mapsto.AJ = "" # Image 5
-mapsto.AK = "" # Availability
+mapsto.AF = "DS" # Image 1
+mapsto.AG = "DT" # Image 2
+mapsto.AH = "DU" # Image 3
+mapsto.AI = "DV" # Image 4
+mapsto.AJ = "DW" # Image 5
+mapsto.AK = "CO" # Availability
 mapsto.AL = "" # Overall Dimension
 mapsto.AM = "" # Single Unit Weight
 
@@ -124,22 +123,22 @@ mapsto.DC = "CJ"
 mapsto.DD = "" # Seat Height
 mapsto.DE = "" # LTL Only
 mapsto.DF = "" # Number of Parcels
-mapsto.DG = "" # UPC Code
-mapsto.DH = "" # Assembly Required
-mapsto.DI = "" # Color
+mapsto.DG = "B" # UPC Code
+mapsto.DH = "DD" # Assembly Required
+mapsto.DI = "CY" # Color
 mapsto.DJ = "" # Data Mapping Color
 mapsto.DK = "" # Finish
 mapsto.DL = "" # Upholstery
-mapsto.DM = "" # Material
-mapsto.DN = "" # Keywords
+mapsto.DM = "DB" # Material
+mapsto.DN = "CX" # Keywords
 mapsto.DO = "" # Flash Path
-mapsto.DP = "" # Product Type
-mapsto.DQ = "" # Made In
+mapsto.DP = "C" # Product Type
+mapsto.DQ = "CZ" # Made In
 mapsto.DR = "" # Main Category
 mapsto.DS = "" # Category
 mapsto.DT = "" # Data Mapping Category
 mapsto.DU = "" # youtube video link
-mapsto.DV = "" # Parent SKU
+mapsto.DV = "L" # Parent SKU
 mapsto.DW = "" # Freight Class
 mapsto.DX = "" # Eligible for $850+ Free Ship Program
 mapsto.DY = "" # Warranty

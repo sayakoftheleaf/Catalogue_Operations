@@ -8,16 +8,19 @@ from mapHeaders import mapHeaders
 
 def main():
     # user input
-    configDir = input('Enter config file name: ')
-    fileDir = input('Enter source file name: ')
-    outputDir = input('Enter the name of the output file to be generated: ')
+    configDir = input('Enter config file name: ') + ".toml"
+    fileDir = input('Enter source file name: ') + ".xlsx"
+    outputDir = input('Enter the name of the output file to be generated: ') + ".xlsx"
     outputSheetName = input('Enter the name of the sheet to be generated: ')
 
     # Resolve Paths
     currentDir = Path('./..')
-    configDir = currentDir / 'Configs' / configDir
+    configDir = currentDir / 'Configs' / configDir 
     fileDir = currentDir / 'Spreadsheets' / fileDir
     outputDir = currentDir / 'Generated' / outputDir
+
+    # translate config to dictionary
+    configDict = toml.load(configDir)
 
     # declaring source information variables
     sourceConfig = configDict.get('sheet')
@@ -34,23 +37,20 @@ def main():
         value = str(value)
 
         if (key == 'rows'):
-            sourceRow = value
+            sourceRow = int(value)
         elif (key == 'cols'):
             sourceCol = openpyxl.utils.column_index_from_string(value)
         elif (key == 'name'):
-            sourceSheet = sourceWorkbook.get_sheet_by_name(value)
-
-    # translate config to dictionary
-    configDict = toml.load()
+            sourceSheet = sourceWorkbook[value]
 
     # output excel destination
     wb = openpyxl.Workbook()
     outputSheet = mapHeaders(configDict, wb.create_sheet(title=outputSheetName))
 
-    mapsTo = configDict.get('mapto')
+    mapsTo = configDict.get('mapsto')
 
     # iterating through the source sheet
-    for iterRow in range(1, sourceRow + 1):
+    for iterRow in range(2, sourceRow + 1):
         outputDict = {} # empty dictionary for every row
   
         for iterCol in range(1, sourceCol + 1):
@@ -58,11 +58,16 @@ def main():
 
             # TODO: check if this works, because you changed read mode to Data only and changed this from internal_value to value
             content = sourceSheet.cell(row = iterRow, column = iterCol).value
+
+            if (content == None):
+                content = ""
         
             # Check if the present column maps to something in the config file
             # This is just a sanity check. In reality, the config generator will always have all of the source columns
             if colLetter in mapsTo:
                 outputCol = mapsTo[colLetter] # getting the output columns
+                if (outputCol == ""):
+                    continue
 
                 # Put the content of the source for every column the source maps to
                 for singleColumn in str(outputCol).split(','):
@@ -78,6 +83,7 @@ def main():
             outputSheet.cell(row = normalizedRow, column = columnIndex, value = formattedValue)
 
     wb.save(outputDir)
+    print("Mapped Document has been generated!")
 
 
 if __name__ == "__main__":
