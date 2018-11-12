@@ -8,13 +8,13 @@ def writeSheetOptions(fileObject, name, rows, cols):
     commentString = "\n# Details of the source sheet. Edit in case info is wrong \n\n"
     name = "sheet.name = \"{0}\"\n".format(name)
     rows = "sheet.rows = +{0}\n".format(str(rows))
-    cols = "sheet.cols = \"{0}\"\n".format(openpyxl.utils.get_column_letter(cols))
+    cols = "sheet.cols = \"{0}\"\n".format(
+        openpyxl.utils.get_column_letter(cols))
 
     fileObject.write("{0}{1}{2}{3}".format(commentString, name, rows, cols))
 
 
 # TODO: Implement cases where one file maps to multiple sources
-
 
 def writeMaps(fileObject, sheet, lastCol):
     commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
@@ -30,10 +30,27 @@ def writeMaps(fileObject, sheet, lastCol):
     fileObject.write(colString)
 
 
+def evaluateOrder(boxInformationOrder):
+    # Removing commas and spaces and converting everything to uppercase
+    boxInformationOrder = boxInformationOrder.replace(" ", "")
+    boxInformationOrder = boxInformationOrder.replace(",", "")
+    boxInformationOrder = boxInformationOrder.upper()
+
+    orderDict = {}
+    for value in ['L', 'B', 'H', 'W']:
+        orderDict[value] = boxInformationOrder.index(value)
+
+    return orderDict
+
+def mapBoxes (fileObject, sheet, sourceBoxesStartFrom, boxInformationOrder):
+    
+    
+
+
 def writeHeaders(fileObject, numberOfBoxes):
     commentString = "\n# These are the headers for the output file. Please do not change these.\n"
-    returnedDict = mapsBoxes(numberOfBoxes, mapsBeforeBox([]))
-    mapsArr = mapsAfterBoxes(
+    returnedDict = headersOfBoxes(numberOfBoxes, headersBeforeBox([]))
+    mapsArr = headersAfterBoxes(
         returnedDict['currentColumn'], returnedDict['mapsto'])
 
     mapsString = commentString
@@ -43,7 +60,7 @@ def writeHeaders(fileObject, numberOfBoxes):
     fileObject.write(mapsString)
 
 
-def mapsBeforeBox(mapsArr):
+def headersBeforeBox(mapsArr):
     mapsArr.append("A = \"Supplier Status (Mandatory)\"")
     mapsArr.append("B = \"UPC/EAN (Mandatory)\"")
     mapsArr.append("C = \"Identifier Type (Mandatory)\" ")
@@ -69,7 +86,7 @@ def mapsBeforeBox(mapsArr):
     return mapsArr
 
 
-def mapsBoxes(numberOfBoxes, mapsArr):
+def headersOfBoxes(numberOfBoxes, mapsArr):
      # starting with the column before the actual start for convenience
     currentColumn = "T"
     for iter in range(1, numberOfBoxes + 1):
@@ -95,7 +112,7 @@ def mapsBoxes(numberOfBoxes, mapsArr):
     }
 
 
-def mapsAfterBoxes(currentColumn, mapsArr):
+def headersAfterBoxes(currentColumn, mapsArr):
     currentColumn = generateExcelColumns(currentColumn)
     mapsArr.append(currentColumn + " = \"Bulk Gross Purchase Price\"")
 
@@ -247,6 +264,10 @@ def main():
         "Please enter the name of the sheet you want to be mapped: ")
     numberOfBoxes = input(
         "Please enter the number of boxes that need to be shipped: ")
+    sourceBoxesStartFrom = input(
+        "Please enter the column (of the source document) from which the information about the boxes begin:")
+    boxInformationOrder = input(
+        "Please enter the order of the information presented in the source document (Example: L,H,B,W)")
 
     numberOfBoxes = int(numberOfBoxes)
 
