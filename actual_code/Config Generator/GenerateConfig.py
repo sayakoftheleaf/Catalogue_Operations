@@ -49,7 +49,6 @@ def main():
     workBook = openpyxl.load_workbook(sourceFile, read_only=True)
     workSheet = workBook[sourceSheet]
 
-    workRows = workSheet.max_row
     workColumns = workSheet.max_column
 
     boxStartCol = openpyxl.utils.column_index_from_string(sourceBoxesStartFrom)
@@ -60,7 +59,7 @@ def main():
 
     writeSheetOptions(
         file, sourceSheet, workRows, workColumns, headerRow, dataStartRow, dataEndRow, skipRows)
-    writeMaps(file, workSheet, workColumns, boxStartCol, boxEndCol, boxInformationOrder)
+    writeMaps(file, workSheet, workColumns, headerRow, boxStartCol, boxEndCol, boxInformationOrder)
     writeHeaders(file, numberOfBoxes)
 
     print("Config file created successfully!")

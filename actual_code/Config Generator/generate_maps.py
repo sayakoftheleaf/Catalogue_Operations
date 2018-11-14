@@ -3,7 +3,7 @@ import openpyxl
 
 from generate_box_config import generateExcelColumns
 
-def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformationOrder):
+def writeMaps(fileObject, sheet, lastCol, headerRow, boxStartCol, boxEndCol,  boxInformationOrder):
 
     commentString = "\n# Put all the mappings here\n# If one column maps to several columns, separate them with a comma\n# DO NOT PUT WHITESPACE AFTER COMMA!\n# For example: mapsto.A = \"B,X\"\n\n"
 
@@ -48,7 +48,7 @@ def writeMaps(fileObject, sheet, lastCol, boxStartCol, boxEndCol,  boxInformatio
                 colString += "# end of the box mappings.\n\n"
         else:
             # get the header inside the cell
-            header = sheet.cell(row=1, column=currentCol).value
+            header = sheet.cell(row=headerRow, column=currentCol).value
 
             columnLetter = openpyxl.utils.get_column_letter(currentCol)
 

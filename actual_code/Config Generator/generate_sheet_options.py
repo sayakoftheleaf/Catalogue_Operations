@@ -2,11 +2,13 @@ import toml
 import openpyxl
 
 def writeSheetOptions(
-  fileObject, name, rows, cols, headerRow, dataStartRow, dataEndRow, skipRows):
+  fileObject, name, cols, headerRow, dataStartRow, dataEndRow, skipRows):
 
     commentString = "\n# Details of the source sheet. Edit in case info is wrong \n\n"
     name = "sheet.name = \"{0}\"\n".format(name)
-    rows = "sheet.rows = +{0}\n".format(str(rows))
+
+    # TODO: the rows dependency in the implementation needs to be deleted
+    # We have richer loop values now
 
     # NEW THINGS - NOT IMPLEMENTED ON PARSER
     headerRow = "sheet.headerrow = +{0}\n".format(str(headerRow))

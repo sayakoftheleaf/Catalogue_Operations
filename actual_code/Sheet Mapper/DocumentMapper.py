@@ -24,7 +24,9 @@ def main():
 
     # declaring source information variables
     sourceConfig = configDict.get('sheet')
-    sourceRow = 0
+    dataStartRow = 0
+    dataEndRow = 0
+    skipRows = []
     sourceCol = 0
     sourceSheet = 'Sheet 1' # default Sheet name in Excel
 
@@ -36,8 +38,15 @@ def main():
         key = str(key)
         value = str(value)
 
-        if (key == 'rows'):
-            sourceRow = int(value)
+        # FIXME: NEW THINGS - UNTESTED
+        if (key == 'dataStartRow'):
+            dataStartRow = int(value)
+        elif (key == 'dataEndRow'):
+            dataEndRow = int(value)
+        elif (key == 'skipRows'):
+            skipRows = [int(x) for x in value.split(',')]
+        # END OF NEW THINGS
+
         elif (key == 'cols'):
             sourceCol = openpyxl.utils.column_index_from_string(value)
         elif (key == 'name'):
@@ -49,9 +58,15 @@ def main():
 
     mapsTo = configDict.get('mapsto')
 
+    # This is where you will start writing on the ouput sheet
+    currentWriteRow = 3 
+
     # iterating through the source sheet
-    for iterRow in range(2, sourceRow + 1):
+    for iterRow in range(dataStartRow, dataEndRow + 1):
         outputDict = {} # empty dictionary for every row
+
+        if iterRow in skipRows:
+            continue
   
         for iterCol in range(1, sourceCol + 1):
             colLetter = openpyxl.utils.get_column_letter(iterCol)
@@ -75,12 +90,15 @@ def main():
 
         for key, dictValue in outputDict.items():
             # adjusting to fit the headers
-            normalizedRow = iterRow + 2
             columnIndex = openpyxl.utils.column_index_from_string(key)
             formattedValue = str(dictValue[0])
     
+            # TODO: Test this, because we implemented a write row inpedendent of the iterRow
+            
             # inserting cells into the new
-            outputSheet.cell(row = normalizedRow, column = columnIndex, value = formattedValue)
+            outputSheet.cell(row = currentWriteRow, column = columnIndex, value = formattedValue)
+        
+        currentWriteRow += 1
 
     wb.save(outputDir)
     print("Mapped Document has been generated!")
