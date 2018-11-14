@@ -11,9 +11,9 @@ sheet.cols = "FP"
 
 mapsto.A = "A" # Status
 mapsto.B = "" # Short Description
-mapsto.C = "" # Product Code Computed
+mapsto.C = "E" # Product Code Computed
 mapsto.D = "DI" # Product Description
-mapsto.E = "" # Flash FOB Price
+mapsto.E = "I,K" # Flash FOB Price
 mapsto.F = "" # Flash Internet Only Landed Cost
 mapsto.G = "" # NMFC Code (Text)
 mapsto.H = "" # Capacity
