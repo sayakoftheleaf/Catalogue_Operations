@@ -14,7 +14,7 @@ def writeSheetOptions(
     headerRow = "sheet.headerrow = +{0}\n".format(str(headerRow))
     dataStartRow = "sheet.datastartrow = +{0}\n".format(str(dataStartRow))
     dataEndRow = "sheet.dataendrow = +{0}\n".format(str(dataEndRow))
-    skipRows = "sheet.skiprows = {0}\n".format(str(skipRows))
+    skipRows = "sheet.skiprows = \"{0}\"\n".format(str(skipRows))
     # END OF NEW THINGS
 
     cols = "sheet.cols = \"{0}\"\n".format(

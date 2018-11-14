@@ -10,4 +10,8 @@
   - Maybe you could also have an option to enter the start row and column of the output excel sheet
   - Then, multiple configs could write to the same file
   - Then you could also take the name of the output file. If it doesn't exist, then generate it.
+- Some catalogs have headers spread across multiple rows
+  - Not handling this case at the moment
+- Some catalogs don't have the weight beside the dimensions
+  - Not handling this at the moment either
  
