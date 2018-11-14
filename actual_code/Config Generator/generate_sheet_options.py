@@ -14,11 +14,12 @@ def writeSheetOptions(
     headerRow = "sheet.headerrow = +{0}\n".format(str(headerRow))
     dataStartRow = "sheet.datastartrow = +{0}\n".format(str(dataStartRow))
     dataEndRow = "sheet.datastartrow = +{0}\n".format(str(dataEndRow))
-    skipRows = "sheet.skiprows = +{0}\n".format(str(skipRows))
+    skipRows = "sheet.skiprows = {0}\n".format(str(skipRows))
     # END OF NEW THINGS
 
     cols = "sheet.cols = \"{0}\"\n".format(
         openpyxl.utils.get_column_letter(cols))
 
-    fileObject.write("{0}{1}{2}{3}".format(commentString, name, rows, cols))
+    fileObject.write("{0}{1}{2}{3}{4}{5}{6}".format(
+      commentString, name, headerRow, dataStartRow, dataEndRow, skipRows, cols))
 

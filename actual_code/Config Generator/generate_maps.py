@@ -18,7 +18,7 @@ def writeMaps(fileObject, sheet, lastCol, headerRow, boxStartCol, boxEndCol,  bo
     # iterate through all of the columns
     while (currentCol <= lastCol):
 
-        if (currentCol >= boxStartCol and currentCol <= boxEndCol):
+        if (currentCol >= boxStartCol and currentCol < boxEndCol):
 
             # printing comment to indicate beginning of box mappings
             if (currentCol == boxStartCol):
@@ -48,12 +48,13 @@ def writeMaps(fileObject, sheet, lastCol, headerRow, boxStartCol, boxEndCol,  bo
                 colString += "# end of the box mappings.\n\n"
         else:
             # get the header inside the cell
-            header = sheet.cell(row=headerRow, column=currentCol).value
+            header = sheet.cell(row=int(headerRow), column=currentCol).value
 
-            columnLetter = openpyxl.utils.get_column_letter(currentCol)
-
-            colString += "mapsto.{0} = \"\" # {1}\n".format(
-                columnLetter, header)
+            if (header != None):
+                header = header.replace('\n', ' ')
+                columnLetter = openpyxl.utils.get_column_letter(currentCol)
+                colString += "mapsto.{0} = \"\" # {1}\n".format(
+                    columnLetter, header)
 
             # increment
             currentCol += 1

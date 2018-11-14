@@ -43,7 +43,7 @@ def main():
 
     # Resolving the Paths
     currentDir = Path('./..')
-    sourceFile = currentDir / 'Spreadsheets' / sourceFile
+    sourceFile = currentDir / 'Spreadsheets' / (sourceFile + '.xlsx')
     configFile = currentDir / 'Configs' / (configFileName + '.toml')
 
     workBook = openpyxl.load_workbook(sourceFile, read_only=True)
@@ -52,13 +52,13 @@ def main():
     workColumns = workSheet.max_column
 
     boxStartCol = openpyxl.utils.column_index_from_string(sourceBoxesStartFrom)
-    boxEndCol = boxStartCol + (4 * numberOfBoxes)
+    boxEndCol = (boxStartCol - 1) + (4 * numberOfBoxes)
 
     # create the toml file
     file = open(configFile, "w+")
 
     writeSheetOptions(
-        file, sourceSheet, workRows, workColumns, headerRow, dataStartRow, dataEndRow, skipRows)
+        file, sourceSheet, workColumns, headerRow, dataStartRow, dataEndRow, skipRows)
     writeMaps(file, workSheet, workColumns, headerRow, boxStartCol, boxEndCol, boxInformationOrder)
     writeHeaders(file, numberOfBoxes)
 
