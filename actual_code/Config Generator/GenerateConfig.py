@@ -14,7 +14,19 @@ def main():
     
     sourceSheet = input(
         "Please enter the name of the sheet you want to be mapped: ")
+
+    headerRow = input(
+        "Please enter the row which has the column headers in the source sheet: ")
+
+    dataStartRow = input(
+        "Please enter the row from which the data starts in the source sheet: ")
     
+    dataEndRow = input(
+        "Please enter the last row that has meaningful data in the source sheet: ")
+
+    skipRows = input(
+        "Please enter the rows that do not have useful data and can be skipped (separate them with commas - Example - 56,405,460): ")
+
     numberOfBoxes = input(
         "Please enter the number of boxes that need to be shipped: ")
     
@@ -46,7 +58,8 @@ def main():
     # create the toml file
     file = open(configFile, "w+")
 
-    writeSheetOptions(file, sourceSheet, workRows, workColumns)
+    writeSheetOptions(
+        file, sourceSheet, workRows, workColumns, headerRow, dataStartRow, dataEndRow, skipRows)
     writeMaps(file, workSheet, workColumns, boxStartCol, boxEndCol, boxInformationOrder)
     writeHeaders(file, numberOfBoxes)
 
