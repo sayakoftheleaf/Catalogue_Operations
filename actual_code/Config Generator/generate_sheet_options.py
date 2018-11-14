@@ -13,7 +13,7 @@ def writeSheetOptions(
     # NEW THINGS - NOT IMPLEMENTED ON PARSER
     headerRow = "sheet.headerrow = +{0}\n".format(str(headerRow))
     dataStartRow = "sheet.datastartrow = +{0}\n".format(str(dataStartRow))
-    dataEndRow = "sheet.datastartrow = +{0}\n".format(str(dataEndRow))
+    dataEndRow = "sheet.dataendrow = +{0}\n".format(str(dataEndRow))
     skipRows = "sheet.skiprows = {0}\n".format(str(skipRows))
     # END OF NEW THINGS
 

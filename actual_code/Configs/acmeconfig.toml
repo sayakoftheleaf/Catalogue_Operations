@@ -4,8 +4,8 @@
 sheet.name = "sheet"
 sheet.headerrow = +2
 sheet.datastartrow = +3
-sheet.datastartrow = +5985
-sheet.skiprows = 
+sheet.dataendrow = +5985
+sheet.skiprows = ""
 sheet.cols = "AI"
 
 # Put all the mappings here

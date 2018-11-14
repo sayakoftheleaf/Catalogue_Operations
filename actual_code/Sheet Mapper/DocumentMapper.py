@@ -39,12 +39,13 @@ def main():
         value = str(value)
 
         # FIXME: NEW THINGS - UNTESTED
-        if (key == 'dataStartRow'):
+        if (key == 'datastartrow'):
             dataStartRow = int(value)
-        elif (key == 'dataEndRow'):
+        elif (key == 'dataendrow'):
             dataEndRow = int(value)
-        elif (key == 'skipRows'):
-            skipRows = [int(x) for x in value.split(',')]
+        elif (key == 'skiprows'):
+            if (value != ''):
+                skipRows = [int(x) for x in value.split(',')]
         # END OF NEW THINGS
 
         elif (key == 'cols'):
@@ -72,6 +73,7 @@ def main():
             colLetter = openpyxl.utils.get_column_letter(iterCol)
 
             # TODO: check if this works, because you changed read mode to Data only and changed this from internal_value to value
+
             content = sourceSheet.cell(row = iterRow, column = iterCol).value
 
             if (content == None):

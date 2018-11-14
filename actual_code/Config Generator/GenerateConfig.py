@@ -25,7 +25,7 @@ def main():
         "Please enter the last row that has meaningful data in the source sheet: ")
 
     skipRows = input(
-        "Please enter the rows that do not have useful data and can be skipped (separate them with commas - Example - 56,405,460): ")
+        "Please enter the rows that do not have useful data and can be skipped (separate them with commas - Example - 56,405,460): ") or ""
 
     numberOfBoxes = input(
         "Please enter the number of boxes that need to be shipped: ")
@@ -39,7 +39,7 @@ def main():
         "Please enter the order of the information presented in the source document (Example: L,H,B,W): ")
 
     configFileName = input(
-        "Please enter the name of the config file to be generated: ")
+        "Please enter the name of the config file to be generated: ") or "generatedconfig"
 
     # Resolving the Paths
     currentDir = Path('./..')
