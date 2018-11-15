@@ -5,10 +5,12 @@ from generate_box_config import generateExcelColumns
 
 def writeHeaders(fileObject, numberOfBoxes):
     commentString = "\n# These are the headers for the output file. Please do not change these.\n"
-    returnedDict = headersOfBoxes(numberOfBoxes, headersBeforeBox([]))
+    returnedDict = headersBeforeBox([])
+    returnedDict = headersOfBoxes(numberOfBoxes, returnedDict)
     mapsArr = headersAfterBoxes(
         returnedDict['currentColumn'], returnedDict['mapsto'])
-
+    
+    # initializes the String with the initial comment
     mapsString = commentString
     for line in mapsArr:
         mapsString += "header." + line + "\n"
@@ -41,8 +43,10 @@ def headersBeforeBox(mapsArr):
     return mapsArr
 
 def headersOfBoxes(numberOfBoxes, mapsArr):
-     # starting with the column before the actual start for convenience
+    # starting with the column before the actual start for convenience
+    # Boxes always starts from "U"
     currentColumn = "T"
+
     for iter in range(1, numberOfBoxes + 1):
         currentColumn = generateExcelColumns(currentColumn)
         mapsArr.append(currentColumn + " = \"Box " + str(iter) +
@@ -67,6 +71,10 @@ def headersOfBoxes(numberOfBoxes, mapsArr):
 
 
 def headersAfterBoxes(currentColumn, mapsArr):
+
+    # The generateExcelColumns function generates the next column name, given
+    # the present column
+    # TODO: Use a better name for the function
     currentColumn = generateExcelColumns(currentColumn)
     mapsArr.append(currentColumn + " = \"Bulk Gross Purchase Price\"")
 

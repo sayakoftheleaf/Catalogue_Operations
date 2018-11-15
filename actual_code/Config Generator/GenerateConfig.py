@@ -10,7 +10,7 @@ from generate_maps import writeMaps
 def main():
 
     #gathering inputs
-    sourceFile = input("Please enter the name of the source Excel document: ")
+    sourceFile = input("Please enter the name of the source Excel document: ") + ".xlsx"
     
     sourceSheet = input(
         "Please enter the name of the sheet you want to be mapped: ")
@@ -38,17 +38,20 @@ def main():
     boxInformationOrder = input(
         "Please enter the order of the information presented in the source document (Example: L,H,B,W): ")
 
-    configFileName = input(
-        "Please enter the name of the config file to be generated: ") or "generatedconfig"
+    configFileName = (input(
+        "Please enter the name of the config file to be generated: ") + ".toml") or "generatedconfig"
 
-    # Resolving the Paths
+    # Resolving relative Paths
     currentDir = Path('./..')
-    sourceFile = currentDir / 'Spreadsheets' / (sourceFile + '.xlsx')
-    configFile = currentDir / 'Configs' / (configFileName + '.toml')
+    sourceFile = currentDir / 'Spreadsheets' / sourceFile
+    configFile = currentDir / 'Configs' / configFileName
 
+    # TODO: Make sure this is OK, because ideally, this flag should be data_only
     workBook = openpyxl.load_workbook(sourceFile, read_only=True)
     workSheet = workBook[sourceSheet]
 
+    # Work with the total number of columns that excel has registered
+    # Assumes that there are no dummy columns with no header or content
     workColumns = workSheet.max_column
 
     boxStartCol = openpyxl.utils.column_index_from_string(sourceBoxesStartFrom)
