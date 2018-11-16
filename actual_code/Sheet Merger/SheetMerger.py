@@ -5,9 +5,8 @@ from pathlib import Path
 # to in the output file as their values
 headerDict = {}
 
-
 def correctExtenstion(someString):
-    if (len(someString.split(.)) != 2 or someString.split[1] != 'xlsx'):
+    if (len(someString.split('.')) != 2 or someString.split[1] != 'xlsx'):
         return someString.split('.')[0] + '.xlsx'
     else:
         return someString
@@ -20,14 +19,15 @@ def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow, writeRow, 
     global headerDict
 
     # assuming that headers are in the first row of the input sheet
-    columnHeader = inputSheet.cell(row=1, column=inputColumn)
+    columnHeader = inputSheet.cell(row=1, column=inputColumn).value
 
     # add a new header to the dictionary
     if not(columnHeader in headerDict):
         headerDict[columnHeader] = nextWriteColumn
+        outputSheet.cell(row=1, column=nextWriteColumn, value=columnHeader)
         nextWriteColumn += 1
 
-    outputColumn = sheetDict[columnHeader]
+    outputColumn = headerDict[columnHeader]
 
     # write all the contents of that column in the
     # corresponding output sheet
@@ -37,13 +37,13 @@ def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow, writeRow, 
         outputSheet.cell(row=writeRow,
                          column=outputColumn, value=str(content))
         writeRow += 1
-    
+
     return nextWriteColumn
 
 
 def mergeSheet(inputWorkbook, sheetName, outputSheet, nextWriteRow, nextWriteColumn):
     # load sheet
-    currentSheet = inputWorkbook[sheet]
+    currentSheet = inputWorkbook[sheetName]
 
     # for every column in the current sheet
     for currentColumn in range(1, currentSheet.max_column + 1):
@@ -70,7 +70,7 @@ def main():
     outputFile = correctExtenstion(outputFile)
 
     # removing whitespace
-    inputSheets = inputSheets.replace(' ', '')
+    inputSheets = inputSheets.replace(', ', ',')
 
     # resolving Paths
     fileDir = currentDir / 'Spreadsheets' / fileDir
@@ -90,9 +90,14 @@ def main():
     # For every sheet to merge
     for sheet in inputSheets.split(','):
         # TODO: There has to be a better way to do this
-        temp = mergeSheet(sourceWorkbook, sheet, writeSheet, nextWriteRow, nextWriteColumn)
+        temp = mergeSheet(sourceWorkbook, sheet, writeSheet,
+                          nextWriteRow, nextWriteColumn)
         nextWriteRow = temp[0]
         nextWriteColumn = temp[1]
+
+    outputWorkbook.save(outputFile)
+    print('Sheets have been merged and output file has been generated!')
+
 
 if __name__ == "__main__":
     main()
