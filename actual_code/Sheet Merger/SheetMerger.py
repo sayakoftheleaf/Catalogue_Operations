@@ -3,7 +3,9 @@ from pathlib import Path
 
 # new dictionary that has headers as keys and the column they output
 # to in the output file as their values
+fileAndSheetDict = {}
 headerDict = {}
+
 
 def correctExtenstion(someString):
     if (len(someString.split('.')) != 2 or someString.split[1] != 'xlsx'):
@@ -56,27 +58,41 @@ def mergeSheet(inputWorkbook, sheetName, outputSheet, nextWriteRow, nextWriteCol
     return [nextWriteRow, nextWriteColumn]
 
 
+def acceptInputAndFormFileDict():
+    global fileAndSheetDict
+
+    numberOfFilesToMerge = input(
+        'Enter the number of excel files you need to merge: ')
+
+    for i in range(0, int(numberOfFilesToMerge)):
+        fileNumber = str(i + 1)
+        fileName = input(
+            'Enter the name of file {0} :'.format(fileNumber))
+        inputSheets = input(
+            'Enter the names of the sheets in file {0}'.format(fileNumber)
+            + 'to be merged (multiple files can be separated by commas): ')
+
+        # removing whitespace
+        inputSheets = inputSheets.replace(', ', ',')
+
+        # correcting the input Name
+        fileName = correctExtenstion(fileName)
+        fileAndSheetDict[fileName] = inputSheets
+
 def main():
+
     currentDir = Path('./..')
 
-    fileDir = input('Enter name of the input xlsx file: ')
+    # accept the Input Files and Sheets
+    acceptInputAndFormFileDict()
+
     outputFile = input('Enter the name of the output file to be generated: ')
-    inputSheets = input(
-        'Enter the names of the sheets to be merged (multiple files can be separated by commas): ')
     outputSheet = input('Enter the name of the output sheet to be generated: ')
 
-    # auto-correcting the input and output extensions
-    fileDir = correctExtenstion(fileDir)
-    outputFile = correctExtenstion(outputFile)
+    # auto-correcting the output extension and resolving the Path
+    outputFile = currentDir / 'Generated' / correctExtenstion(outputFile)
 
-    # removing whitespace
-    inputSheets = inputSheets.replace(', ', ',')
 
-    # resolving Paths
-    fileDir = currentDir / 'Spreadsheets' / fileDir
-    outputFile = currentDir / 'Generated' / outputFile
-
-    sourceWorkbook = openpyxl.load_workbook(fileDir, data_only=True)
     outputWorkbook = openpyxl.Workbook()
     writeSheet = outputWorkbook.create_sheet(title=outputSheet)
 
@@ -87,17 +103,22 @@ def main():
     # next row in the output where the content can be written
     nextWriteRow = 3
 
-    # For every sheet to merge
-    for sheet in inputSheets.split(','):
-        # TODO: There has to be a better way to do this
-        temp = mergeSheet(sourceWorkbook, sheet, writeSheet,
+    # For every file, run through their sheets
+    for inputFile, inputSheets in fileAndSheetDict:
+        
+        fileDir = currentDir / 'Spreadsheets' / inputFile
+        sourceWorkbook = openpyxl.load_workbook(fileDir, data_only=True)
+
+        # For every sheet to merge
+        for sheet in inputSheets.split(','):
+            # TODO: There has to be a better way to do this
+            temp = mergeSheet(sourceWorkbook, sheet, writeSheet,
                           nextWriteRow, nextWriteColumn)
-        nextWriteRow = temp[0]
-        nextWriteColumn = temp[1]
+            nextWriteRow = temp[0]
+            nextWriteColumn = temp[1]
 
     outputWorkbook.save(outputFile)
     print('Sheets have been merged and output file has been generated!')
-
 
 if __name__ == "__main__":
     main()

@@ -10,14 +10,17 @@ def main():
     # user input
     configDir = input('Enter config file name: ') + ".toml"
     fileDir = input('Enter source file name: ') + ".xlsx"
-    outputDir = input('Enter the name of the output file to be generated: ') + ".xlsx"
+    outPutFileName = input('Enter the name of the output file to be generated: ') + ".xlsx"
+    outPutDir = input('Enter the name of the subdirectory you want the file to be saved on (Press ENTER for default): ')
     outputSheetName = input('Enter the name of the sheet to be generated: ')
 
     # Resolve Paths
     currentDir = Path('./..')
     configDir = currentDir / 'Configs' / configDir 
     fileDir = currentDir / 'Spreadsheets' / fileDir
-    outputDir = currentDir / 'Generated' / outputDir
+    outPutDir= currentDir / 'Generated' / outPutDir.mkdir(parents=True, exist_ok=True) 
+    outPutFileName = outPutDir / outPutFileName
+
 
     # translate config to dictionary
     configDict = toml.load(configDir)
@@ -37,8 +40,7 @@ def main():
     for key, value in sourceConfig.items():
         key = str(key)
         value = str(value)
-
-        # FIXME: NEW THINGS - UNTESTED
+        
         if (key == 'datastartrow'):
             dataStartRow = int(value)
         elif (key == 'dataendrow'):
@@ -62,6 +64,8 @@ def main():
     # This is where you will start writing on the ouput sheet
     currentWriteRow = 3 
 
+    # TODO: Implemented a Feature that ignores Empty Rows. Check if it is working as intended
+
     # iterating through the source sheet
     for iterRow in range(dataStartRow, dataEndRow + 1):
         outputDict = {} # empty dictionary for every row
@@ -69,6 +73,7 @@ def main():
         if iterRow in skipRows:
             continue
   
+        isRowEmpty = False
         for iterCol in range(1, sourceCol + 1):
             colLetter = openpyxl.utils.get_column_letter(iterCol)
 
@@ -78,7 +83,11 @@ def main():
 
             if (content == None):
                 content = ""
-        
+                if (isRowEmpty == False and iterCol == 1): 
+                    isRowEmpty = True
+            elif (isRowEmpty == True): 
+                isRowEmpty = False
+
             # Check if the present column maps to something in the config file
             # This is just a sanity check. In reality, the config generator will always have all of the source columns
             if colLetter in mapsTo:
@@ -100,9 +109,10 @@ def main():
             # inserting cells into the new
             outputSheet.cell(row = currentWriteRow, column = columnIndex, value = formattedValue)
         
-        currentWriteRow += 1
+        if (isRowEmpty == False):
+            currentWriteRow += 1
 
-    wb.save(outputDir)
+    wb.save(outPutFileName)
     print("Mapped Document has been generated!")
 
 
