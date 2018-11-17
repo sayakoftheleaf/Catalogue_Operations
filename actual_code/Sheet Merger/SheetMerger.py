@@ -10,11 +10,13 @@ headerDict = {}
 nextWriteRow = 3
 nextWriteColumn = 1
 
+
 def correctExtenstion(someString):
     if (len(someString.split('.')) != 2 or someString.split[1] != 'xlsx'):
         return someString.split('.')[0] + '.xlsx'
     else:
         return someString
+
 
 def acceptInputAndFormFileDict():
     global fileAndSheetDict
@@ -38,6 +40,8 @@ def acceptInputAndFormFileDict():
         fileAndSheetDict[fileName] = inputSheets
 
 # Writes all the contents of a column into the output Sheet
+
+
 def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow):
     global headerDict
     global nextWriteColumn
@@ -54,31 +58,45 @@ def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow):
 
     outputColumn = headerDict[columnHeader]
 
+    isRowEmpty = True # becomes False when first content is encountered
+
     # write all the contents of that column in the corresponding output sheet
-    isRowEmpty = True
     for currentRow in range(2, maxRow + 1):
         content = inputSheet.cell(row=currentRow, column=inputColumn).value
-        
-        # Don't print None in the output sheet, but leave things blank
-        if (content == 'None'): content = ''
-        elif (isRowEmpty == True): isEmpty = False
-       
-        outputSheet.cell(row=nextWriteRow, column=outputColumn, value=str(content))
-        
+
+        # Leave cells blank instead of printing None
+        # None clutters up the sheet
+        if (content == 'None'):
+            content = ''
+        elif (isRowEmpty == True):
+            isRowEmpty = False
+
+        outputSheet.cell(row=nextWriteRow,
+                         column=outputColumn, value=str(content))
+
         # if the Row is empty, you can overwrite it next time
-        if (isEmpty == False): nextWriteRow += 1
+        if (isRowEmpty == False):
+            nextWriteRow += 1
 
 
 def mergeSheet(inputSheet, outputSheet):
     global nextWriteColumn
     global nextWriteRow
 
+    startWritingAtRow = nextWriteRow
+
     # for every column in the current sheet
     for currentColumn in range(1, inputSheet.max_column + 1):
-        readAndOutputColumn(currentColumn, inputSheet, outputSheet, inputSheet.max_row)
+        # Since this is writing one column at a time, you need to refresh
+        # the write row after a column is done
+        nextWriteRow = startWritingAtRow
+        
+        readAndOutputColumn(currentColumn, inputSheet,
+                            outputSheet, inputSheet.max_row)
 
     # the next sheet needs to print content below the current sheet
     nextWriteRow += inputSheet.max_row + 1
+
 
 def main():
 
@@ -93,13 +111,12 @@ def main():
     # auto-correcting the output extension and resolving the Path
     outputFile = currentDir / 'Generated' / correctExtenstion(outputFile)
 
-
     outputWorkbook = openpyxl.Workbook()
     writeSheet = outputWorkbook.create_sheet(title=outputSheet)
 
     # For every file, run through their sheets
     for inputFile, inputSheets in fileAndSheetDict:
-        
+
         fileDir = currentDir / 'Spreadsheets' / inputFile
         sourceWorkbook = openpyxl.load_workbook(fileDir, data_only=True)
 
@@ -112,6 +129,7 @@ def main():
 
     outputWorkbook.save(outputFile)
     print('Sheets have been merged and output file has been generated!')
+
 
 if __name__ == "__main__":
     main()
