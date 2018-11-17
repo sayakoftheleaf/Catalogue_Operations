@@ -73,7 +73,7 @@ def main():
         if iterRow in skipRows:
             continue
   
-        isRowEmpty = False
+        isRowEmpty = True
         for iterCol in range(1, sourceCol + 1):
             colLetter = openpyxl.utils.get_column_letter(iterCol)
 
@@ -83,8 +83,6 @@ def main():
 
             if (content == None):
                 content = ""
-                if (isRowEmpty == False and iterCol == 1): 
-                    isRowEmpty = True
             elif (isRowEmpty == True): 
                 isRowEmpty = False
 

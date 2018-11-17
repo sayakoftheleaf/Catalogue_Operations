@@ -6,57 +6,15 @@ from pathlib import Path
 fileAndSheetDict = {}
 headerDict = {}
 
+# Global variables that keep track of the write pointer in the output sheet
+nextWriteRow = 3
+nextWriteColumn = 1
 
 def correctExtenstion(someString):
     if (len(someString.split('.')) != 2 or someString.split[1] != 'xlsx'):
         return someString.split('.')[0] + '.xlsx'
     else:
         return someString
-
-# Writes all the contents of a column into the output Sheet
-
-
-def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow, writeRow, nextWriteColumn):
-    # we need to modify global Dict
-    global headerDict
-
-    # assuming that headers are in the first row of the input sheet
-    columnHeader = inputSheet.cell(row=1, column=inputColumn).value
-
-    # add a new header to the dictionary
-    if not(columnHeader in headerDict):
-        headerDict[columnHeader] = nextWriteColumn
-        outputSheet.cell(row=1, column=nextWriteColumn, value=columnHeader)
-        nextWriteColumn += 1
-
-    outputColumn = headerDict[columnHeader]
-
-    # write all the contents of that column in the
-    # corresponding output sheet
-    # Assuming that the content in the source sheet begin from row 3
-    for currentRow in range(3, maxRow + 1):
-        content = inputSheet.cell(row=currentRow, column=inputColumn).value
-        outputSheet.cell(row=writeRow,
-                         column=outputColumn, value=str(content))
-        writeRow += 1
-
-    return nextWriteColumn
-
-
-def mergeSheet(inputWorkbook, sheetName, outputSheet, nextWriteRow, nextWriteColumn):
-    # load sheet
-    currentSheet = inputWorkbook[sheetName]
-
-    # for every column in the current sheet
-    for currentColumn in range(1, currentSheet.max_column + 1):
-        nextWriteColumn = readAndOutputColumn(
-            currentColumn, currentSheet, outputSheet, currentSheet.max_row, nextWriteRow, nextWriteColumn)
-
-    # the next sheet needs to print content below the current sheet
-    nextWriteRow += currentSheet.max_row + 1
-
-    return [nextWriteRow, nextWriteColumn]
-
 
 def acceptInputAndFormFileDict():
     global fileAndSheetDict
@@ -79,6 +37,49 @@ def acceptInputAndFormFileDict():
         fileName = correctExtenstion(fileName)
         fileAndSheetDict[fileName] = inputSheets
 
+# Writes all the contents of a column into the output Sheet
+def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow):
+    global headerDict
+    global nextWriteColumn
+    global nextWriteRow
+
+    # assuming that headers are in the first row of the input sheet
+    columnHeader = inputSheet.cell(row=1, column=inputColumn).value
+
+    # add a new header to the dictionary
+    if not(columnHeader in headerDict):
+        headerDict[columnHeader] = nextWriteColumn
+        outputSheet.cell(row=1, column=nextWriteColumn, value=columnHeader)
+        nextWriteColumn += 1
+
+    outputColumn = headerDict[columnHeader]
+
+    # write all the contents of that column in the corresponding output sheet
+    isRowEmpty = True
+    for currentRow in range(2, maxRow + 1):
+        content = inputSheet.cell(row=currentRow, column=inputColumn).value
+        
+        # Don't print None in the output sheet, but leave things blank
+        if (content == 'None'): content = ''
+        elif (isRowEmpty == True): isEmpty = False
+       
+        outputSheet.cell(row=nextWriteRow, column=outputColumn, value=str(content))
+        
+        # if the Row is empty, you can overwrite it next time
+        if (isEmpty == False): nextWriteRow += 1
+
+
+def mergeSheet(inputSheet, outputSheet):
+    global nextWriteColumn
+    global nextWriteRow
+
+    # for every column in the current sheet
+    for currentColumn in range(1, inputSheet.max_column + 1):
+        readAndOutputColumn(currentColumn, inputSheet, outputSheet, inputSheet.max_row)
+
+    # the next sheet needs to print content below the current sheet
+    nextWriteRow += inputSheet.max_row + 1
+
 def main():
 
     currentDir = Path('./..')
@@ -96,13 +97,6 @@ def main():
     outputWorkbook = openpyxl.Workbook()
     writeSheet = outputWorkbook.create_sheet(title=outputSheet)
 
-    # next possible column a header can be written in
-    # in the output sheet
-    nextWriteColumn = 1
-
-    # next row in the output where the content can be written
-    nextWriteRow = 3
-
     # For every file, run through their sheets
     for inputFile, inputSheets in fileAndSheetDict:
         
@@ -112,10 +106,9 @@ def main():
         # For every sheet to merge
         for sheet in inputSheets.split(','):
             # TODO: There has to be a better way to do this
-            temp = mergeSheet(sourceWorkbook, sheet, writeSheet,
-                          nextWriteRow, nextWriteColumn)
-            nextWriteRow = temp[0]
-            nextWriteColumn = temp[1]
+            # Putting the contents of the current sheet into the output sheet
+            inputSheet = sourceWorkbook[sheet]
+            mergeSheet(inputSheet, writeSheet)
 
     outputWorkbook.save(outputFile)
     print('Sheets have been merged and output file has been generated!')
