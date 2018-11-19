@@ -1,5 +1,6 @@
 import openpyxl
 from pathlib import Path
+from os import listdir
 
 # new dictionary that has headers as keys and the column they output
 # to in the output file as their values
@@ -18,9 +19,13 @@ def correctExtenstion(someString):
         return someString
 
 
-def acceptInputAndFormFileDict():
+def addFileToDict(fileName, sheetNames):
     global fileAndSheetDict
 
+    fileAndSheetDict[fileName] = sheetNames
+
+
+def acceptMultipleFiles():
     numberOfFilesToMerge = input(
         'Enter the number of excel files you need to merge: ')
 
@@ -37,7 +42,37 @@ def acceptInputAndFormFileDict():
 
         # correcting the input Name
         fileName = correctExtenstion(fileName)
-        fileAndSheetDict[fileName] = inputSheets
+
+        addFileToDict(fileName, inputSheets)
+
+
+def acceptFilesFromDirectory(currentDir):
+    dirName = input('Please enter the name of the directory that has the files to be merged: ')
+    sheetVerification = input('Are all the sheets in the files to be merged? (y for YES or n for NO): ')
+    if (sheetVerification == 'n' or sheetVerification == 'N'):
+        print('Please delete the unnecessary sheets and try again.')
+        exit() # Currently cannot handle unnecessary sheets
+    
+    filesToOpen = listdir(currentDir / 'SpreadSheets' / dirName)
+    
+    for currentFile in filesToOpen:
+        currentWorkbook = openpyxl.load_workbook(currentFile)
+        sheets = ','.join(currentWorkbook.get_sheet_names())
+        addFileToDict(currentFile, sheets)
+
+
+def acceptInputAndFormFileDict(curentDir):
+    navigationType = input(
+        'Are you going to merge individual files or all files in a directory (f for file, d for dir): ')
+
+    if (navigationType == 'd'):
+        acceptFilesFromDirectory(curentDir)
+    elif (navigationType == 'f'):
+        acceptMultipleFiles()
+    else:
+        print('Invalid Input. Please try again.')
+        acceptInputAndFormFileDict(curentDir)
+
 
 # Writes all the contents of a column into the output Sheet
 
@@ -58,7 +93,7 @@ def readAndOutputColumn(inputColumn, inputSheet, outputSheet, maxRow):
 
     outputColumn = headerDict[columnHeader]
 
-    isRowEmpty = True # becomes False when first content is encountered
+    isRowEmpty = True  # becomes False when first content is encountered
 
     # write all the contents of that column in the corresponding output sheet
     for currentRow in range(2, maxRow + 1):
@@ -90,7 +125,7 @@ def mergeSheet(inputSheet, outputSheet):
         # Since this is writing one column at a time, you need to refresh
         # the write row after a column is done
         nextWriteRow = startWritingAtRow
-        
+
         readAndOutputColumn(currentColumn, inputSheet,
                             outputSheet, inputSheet.max_row)
 
@@ -103,7 +138,7 @@ def main():
     currentDir = Path('./..')
 
     # accept the Input Files and Sheets
-    acceptInputAndFormFileDict()
+    acceptInputAndFormFileDict(currentDir)
 
     outputFile = input('Enter the name of the output file to be generated: ')
     outputSheet = input('Enter the name of the output sheet to be generated: ')
