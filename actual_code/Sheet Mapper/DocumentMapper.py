@@ -13,17 +13,21 @@ def main():
     fileDir = input('Enter source file name: ') + ".xlsx"
     outPutFileName = input(
         'Enter the name of the output file to be generated: ') + ".xlsx"
-    outPutDir = input(
-        'Enter the name of the subdirectory you want the file to be saved on (Press ENTER for default): ')
+
+    # TODO: Implement this - currently not working
+    # outPutDir = input(
+    #     'Enter the name of the subdirectory you want the file to be saved on (Press ENTER for default): ')
     outputSheetName = input('Enter the name of the sheet to be generated: ')
 
     # Resolve Paths
     currentDir = Path('./..')
     configDir = currentDir / 'Configs' / configDir
     fileDir = currentDir / 'Spreadsheets' / fileDir
-    outPutDir = currentDir / 'Generated' / \
-        outPutDir.mkdir(parents=True, exist_ok=True)
-    outPutFileName = outPutDir / outPutFileName
+    # outPutDir = currentDir / 'Generated' / \
+    #     outPutDir.mkdir(parents=True, exist_ok=True)
+    #outPutDir = currentDir / 'Generated' /  # outPutDir
+    # outPutFileName = outPutDir / outPutFileName
+    outPutFileName = currentDir / 'Generated' / outPutFileName # FIXME: fix this to also work with custom directories
 
     # translate config to dictionary
     configDict = toml.load(configDir)
