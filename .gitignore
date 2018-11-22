@@ -1,8 +1,0 @@
-# Ignore Directories
-*/
-!/actual_code
-!/README.md
-/actual_code/*
-!/actual_code/Sheet_Mapper
-!/actual_code/Sheet_Merger
-!/actual_code/Config_Generator
