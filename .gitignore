@@ -1,0 +1,6 @@
+# Ignore Directories
+/actual_code/*
+/iterative_testing/
+!/actual_code/Sheet_Mapper
+!/actual_code/Sheet_Merger
+!/actual_code/Config_generator
