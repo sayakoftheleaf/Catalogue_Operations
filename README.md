@@ -1,5 +1,10 @@
-# Excel_mapper
-Converts an excel file into another excel file given a config
+# Catalogue_Operations
+
+**Sheet Mapper** - Maps an .xlsx document into another .xlsx document given a .toml config file
+**Config Generator** - Generates the outline of a config that can then be modified to be used in the Sheet Mapper
+**Sheet Merger** - Merges multiple sheets into one sheet. Can operate across mulitple .xlsx files and all .xlsx files on a subdirectory.
+
+**NOTE:** .xls format is not supported currently
 
 ## Setup Instructions
 
