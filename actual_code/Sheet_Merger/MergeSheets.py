@@ -2,6 +2,8 @@ from pathlib import Path
 import openpyxl as pyx
 from copy import deepcopy
 
+from SourceChecks import checkForRepeatColumns
+
 
 def findLastRowWithMeaningfulValue(inputSheet):
     # Run through the rows
@@ -74,6 +76,7 @@ def mergeSheets(currentDir, stateObject, outputSheet):
             if sheet in stateObject['dontMerge']:
                 continue
 
+            checkForRepeatColumns(sourceWorkbook[sheet], sheet, inputFile)
             # Putting the contents of the current sheet into the output sheet
             mergeOneSheet(sourceWorkbook[sheet],
                           outputSheet, writeParameters, headerDict)
