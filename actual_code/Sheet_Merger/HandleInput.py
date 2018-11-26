@@ -94,9 +94,14 @@ def acceptInputAndFormFileDict(curentDir, stateObject):
         'Are you going to merge individual files'
         'or all files in a directory (f for file, d for dir): ')
 
+    stateObject['debugMode'] = input(
+        'Do you want to map the source row to the output row for debugging?'
+        '(y or n):')
+
     if (navigationType == 'd'):
         acceptFilesFromDirectory(
-            curentDir, stateObject['dontMerge'], stateObject['fileAndSheetDict'])
+            curentDir, stateObject['dontMerge'],
+            stateObject['fileAndSheetDict'])
     elif (navigationType == 'f'):
         acceptMultipleFiles(
             stateObject['dontMerge'], stateObject['fileAndSheetDict'])

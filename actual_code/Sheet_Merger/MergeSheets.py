@@ -4,7 +4,6 @@ from copy import deepcopy
 
 from SourceChecks import checkForRepeatColumns
 
-
 def findLastRowWithMeaningfulValue(inputSheet):
     # Run through the rows
     for inputRow in range(inputSheet.max_row, 0, -1):
@@ -19,7 +18,21 @@ def findLastRowWithMeaningfulValue(inputSheet):
     return 0  # This happens when the sheet is empty
 
 
-def makeNewHeadersAndMapColumns(inputSheet, outputSheet, writeParameters, headerDict, columnMappings):
+def makeNewHeadersAndMapColumns(
+        inputSheet, 
+        outputSheet, 
+        writeParameters, 
+        headerDict, 
+        columnMappings,
+        debugMode):
+
+    # Add an extra column that puts the source of the contents for better
+    # debugging
+    if (debugMode == 'y' and headerDict.get('SourceRow') == None):
+        headerDict['SourceRow'] = writeParameters['nextWriteColumn']
+        outputSheet.cell(
+                row=1, column=writeParameters['nextWriteColumn'], value="source of this row")
+        writeParameters['nextWriteColumn'] += 1
 
     for col in range(1, inputSheet.max_column + 1):
         columnHeader = inputSheet.cell(row=1, column=col).value
@@ -34,16 +47,30 @@ def makeNewHeadersAndMapColumns(inputSheet, outputSheet, writeParameters, header
         else:
             columnMappings[col] = headerDict[columnHeader]
 
-def mergeOneSheet(inputSheet, outputSheet, writeParameters, headerDict):
+def mergeOneSheet(
+        inputSheet, 
+        outputSheet, 
+        writeParameters, 
+        headerDict, 
+        debugMode,
+        fileName,
+        sheetName):
     columnMappings = {}
 
     # TODO: Handle cases when the sheet is empty
     lastRow = findLastRowWithMeaningfulValue(inputSheet)
 
-    makeNewHeadersAndMapColumns(inputSheet, outputSheet, writeParameters, headerDict, columnMappings)
+    makeNewHeadersAndMapColumns(
+            inputSheet, outputSheet, writeParameters, headerDict, columnMappings, debugMode)
 
     for row in range(2, lastRow + 1):
         isRowEmpty = True
+        
+        if (debugMode == 'y'):
+            outputSheet.cell(
+                row = writeParameters['nextWriteRow'],
+                column = headerDict['SourceRow'],
+                value = fileName + '=>' + sheetName + ': row = ' + str(row))
         for col in range(1, inputSheet.max_column + 1):
             content = inputSheet.cell(row=row, column=col).value
             if (str(content) != 'None' and str(content) != ''):
@@ -78,5 +105,11 @@ def mergeSheets(currentDir, stateObject, outputSheet):
 
             checkForRepeatColumns(sourceWorkbook[sheet], sheet, inputFile)
             # Putting the contents of the current sheet into the output sheet
-            mergeOneSheet(sourceWorkbook[sheet],
-                          outputSheet, writeParameters, headerDict)
+            mergeOneSheet(
+                    sourceWorkbook[sheet], 
+                    outputSheet, 
+                    writeParameters, 
+                    headerDict,
+                    stateObject['debugMode'],
+                    inputFile,
+                    sheet)
