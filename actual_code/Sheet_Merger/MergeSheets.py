@@ -22,7 +22,8 @@ def makeNewHeadersAndMapColumns(
         inputSheet, 
         outputSheet, 
         writeParameters, 
-        headerDict, 
+        headerDict,
+        duplicates,
         columnMappings,
         debugMode):
 
@@ -36,22 +37,42 @@ def makeNewHeadersAndMapColumns(
 
     for col in range(1, inputSheet.max_column + 1):
         columnHeader = inputSheet.cell(row=1, column=col).value
+        if not(columnHeader == None):
+             columnHeader = columnHeader.strip() # trim whitespace
+             columnHeaderLower = columnHeader.lower()
+            
+        # if this column is a duplicate
+        if columnHeaderLower in duplicates:
+            # the first encounter with a duplicate is the same as that of a
+            # non duplicate
+            if (duplicates[columnHeaderLower] == 0):
+                duplicates[columnHeaderLower] = 1
+            # modify the header for all future encounters
+            else:
+                duplicateExtension = '[{0}]'.format(str(duplicates[columnHeaderLower]))
+                
+                # next time, use the next duplicate index
+                duplicates[columnHeaderLower] += 1
+
+                columnHeader = columnHeader + duplicateExtension
+                columnHeaderLower = columnHeaderLower + duplicateExtension
 
         # add a new header to the dictionary
-        if not(columnHeader in headerDict):
-            headerDict[columnHeader] = writeParameters['nextWriteColumn']
+        if not(columnHeaderLower in headerDict):
+            headerDict[columnHeaderLower] = writeParameters['nextWriteColumn']
             outputSheet.cell(
                 row=1, column=writeParameters['nextWriteColumn'], value=columnHeader)
             columnMappings[col] = writeParameters['nextWriteColumn']
             writeParameters['nextWriteColumn'] += 1
-        else:
-            columnMappings[col] = headerDict[columnHeader]
+        else:       
+            columnMappings[col] = headerDict[columnHeaderLower]
 
 def mergeOneSheet(
         inputSheet, 
         outputSheet, 
         writeParameters, 
-        headerDict, 
+        headerDict,
+        duplicates,
         debugMode,
         fileName,
         sheetName):
@@ -61,7 +82,7 @@ def mergeOneSheet(
     lastRow = findLastRowWithMeaningfulValue(inputSheet)
 
     makeNewHeadersAndMapColumns(
-            inputSheet, outputSheet, writeParameters, headerDict, columnMappings, debugMode)
+            inputSheet, outputSheet, writeParameters, headerDict, duplicates, columnMappings, debugMode)
 
     for row in range(2, lastRow + 1):
         isRowEmpty = True
@@ -103,13 +124,14 @@ def mergeSheets(currentDir, stateObject, outputSheet):
             if sheet in stateObject['dontMerge']:
                 continue
 
-            checkForRepeatColumns(sourceWorkbook[sheet], sheet, inputFile)
+            duplicates = checkForRepeatColumns(sourceWorkbook[sheet], sheet, inputFile)
             # Putting the contents of the current sheet into the output sheet
             mergeOneSheet(
                     sourceWorkbook[sheet], 
                     outputSheet, 
                     writeParameters, 
                     headerDict,
+                    duplicates,
                     stateObject['debugMode'],
                     inputFile,
                     sheet)
