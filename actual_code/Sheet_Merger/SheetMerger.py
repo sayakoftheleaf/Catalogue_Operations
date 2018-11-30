@@ -6,8 +6,8 @@ from MergeSheets import mergeSheets
 from HandleInput import acceptInputAndFormFileDict, correctExtenstion
 
 stateObject = {
-    'dontMerge': [],
-    'fileAndSheetDict': {}
+    'fileAndSheetDict': {},
+    'debugMode': ''
 }
 
 def main():

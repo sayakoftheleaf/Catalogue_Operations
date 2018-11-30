@@ -19,13 +19,7 @@ def findLastRowWithMeaningfulValue(inputSheet):
 
 
 def makeNewHeadersAndMapColumns(
-        inputSheet, 
-        outputSheet, 
-        writeParameters, 
-        headerDict,
-        duplicates,
-        columnMappings,
-        debugMode):
+    inputSheet, outputSheet, writeParameters, headerDict, duplicates, columnMappings, debugMode):
 
     # Add an extra column that puts the source of the contents for better
     # debugging
@@ -68,14 +62,7 @@ def makeNewHeadersAndMapColumns(
             columnMappings[col] = headerDict[columnHeaderLower]
 
 def mergeOneSheet(
-        inputSheet, 
-        outputSheet, 
-        writeParameters, 
-        headerDict,
-        duplicates,
-        debugMode,
-        fileName,
-        sheetName):
+    inputSheet, outputSheet, writeParameters, headerDict, duplicates, debugMode, fileName, sheetName):
     columnMappings = {}
 
     # TODO: Handle cases when the sheet is empty
@@ -121,17 +108,8 @@ def mergeSheets(currentDir, stateObject, outputSheet):
 
         # For every sheet to merge
         for sheet in inputSheets.split(','):
-            if sheet in stateObject['dontMerge']:
-                continue
-
             duplicates = checkForRepeatColumns(sourceWorkbook[sheet], sheet, inputFile)
             # Putting the contents of the current sheet into the output sheet
             mergeOneSheet(
-                    sourceWorkbook[sheet], 
-                    outputSheet, 
-                    writeParameters, 
-                    headerDict,
-                    duplicates,
-                    stateObject['debugMode'],
-                    inputFile,
-                    sheet)
+                sourceWorkbook[sheet], outputSheet, writeParameters, headerDict, duplicates,
+                stateObject['debugMode'], inputFile, sheet)
