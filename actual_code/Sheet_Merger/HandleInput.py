@@ -3,6 +3,7 @@ import openpyxl as pyx
 
 # A bunch of verification checks prompted to the user to ensure correct
 # input file format
+
 def fileChecks():
     xlsxVerification = input(
         'Are all the files in .xlsx format? (.xls is not supported) (y or n): ')
@@ -28,7 +29,7 @@ def mergeAllSheets(currentFile):
         return False
     else:
         print('invalid input')
-        sheetInputs(currentFile)
+        mergeAllSheets(currentFile)
 
 # Add an extension to the filename entered as input if it already doesn't have one
 # Or correct a wrong extension hoping it was a mistype
@@ -121,7 +122,7 @@ def acceptMultipleFiles(currentDir, fileAndSheetDict):
         addFileToDict(fileName, inputSheets, fileAndSheetDict)
 
 
-def acceptInputAndFormFileDict(curentDir, stateObject):
+def acceptInputAndFormFileDict(currentDir, stateObject):
 
     navigationType = input(
         'Are you going to merge individual files'
@@ -132,9 +133,9 @@ def acceptInputAndFormFileDict(curentDir, stateObject):
         '(y or n):')
 
     if (navigationType == 'd'):
-        acceptFilesFromDirectory(curentDir, stateObject['fileAndSheetDict'])
+        acceptFilesFromDirectory(currentDir, stateObject['fileAndSheetDict'])
     elif (navigationType == 'f'):
         acceptMultipleFiles(currentDir, stateObject['fileAndSheetDict'])
     else:
         print('Invalid Input. Please try again.')
-        acceptInputAndFormFileDict(curentDir, stateObject)
+        acceptInputAndFormFileDict(currentDir, stateObject)
